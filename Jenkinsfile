@@ -1,12 +1,30 @@
 pipeline {
     agent any
+
     stages {
-        stage('Checkout SCM') {
+        stage('Clone Repository') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                          userRemoteConfigs: [[url: 'https://github.com/ManikandasamyS4/vulnerable.git']]])
+                // Clone your GitHub repository
+                git branch: 'main', credentialsId: 'your-github-credentials', url: 'https://github.com/your-username/your-repo.git'
             }
         }
-        // Other stages...
+        
+        stage('Build Docker Image') {
+            steps {
+                // Build Docker image from Dockerfile in the repository
+                script {
+                    def customImage = docker.build('my-custom-image:latest', '.')
+                }
+            }
+        }
+
+        // Add more stages for your pipeline (e.g., testing, deployment, etc.)
+    }
+    
+    post {
+        always {
+            // Clean up Docker resources
+            cleanWs()
+        }
     }
 }
