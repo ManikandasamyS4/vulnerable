@@ -5,7 +5,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Clone your GitHub repository
-                git branch: 'main', credentialsId: 'your-github-credentials', url: 'https://github.com/your-username/your-repo.git'
+                git branch: 'main', credentialsId: 'your-github-credentials', url: 'https://github.com/ManikandasamyS4/vulnerable.git'
             }
         }
         
