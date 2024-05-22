@@ -1,27 +1,37 @@
 pipeline {
     agent any
-    
     stages {
-        stage('Clone Repository') {
+        stage('Build') {
             steps {
-                git url: 'https://github.com/ManikandasamyS4/vulnerable.git', branch: 'main'
+                echo 'Building...'
+                // Your build steps here
             }
         }
-        
-        stage('Build Docker Image') {
+        stage('Astra Scan') {
             steps {
                 script {
-                    // Check if the Docker Daemon is accessible
-                    bat 'docker --version'
-                    // Build Docker Image
-                    bat 'docker build -t my-image:latest .'
+                    try {
+                        sh 'astra scan --target http://yourapiendpoint --output results.json'
+                        archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
+                        // Optional: Add logic to parse results and fail the build if critical issues are found
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
                 }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Your deployment steps here
             }
         }
     }
     post {
         always {
-            cleanWs()
+            echo 'Cleaning up...'
+            // Actions to perform after every build
         }
     }
 }
