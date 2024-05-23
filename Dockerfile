@@ -1,7 +1,7 @@
-# Use the base image with the necessary tools (e.g., Python, Git)
+# Use a Python base image
 FROM python:3.9-slim
 
-# Install required packages
+# Update and install necessary packages
 RUN apt-get update && \
     apt-get install -y git && \
     apt-get clean && \
@@ -10,10 +10,5 @@ RUN apt-get update && \
 # Clone Astra repository and install
 RUN git clone https://github.com/flipkart-incubator/Astra.git && \
     cd Astra && \
+    ls -al && \
     python setup.py install
-
-# Set the working directory
-WORKDIR /Astra
-
-# Command to run when the container starts
-CMD ["astra"]
