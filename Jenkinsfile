@@ -1,6 +1,11 @@
 pipeline {
     agent any
     stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/ManikandasamyS4/vulnerable.git'
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building...'
@@ -10,10 +15,15 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Ensure Docker is installed and running on the Jenkins host
-                        docker.image('https://github.com/ManikandasamyS4/vulnerable/edit/main/Dockerfile/astra-cli-image:latest').inside {
+                        // Check Docker version and status
+                        sh 'docker --version'
+                        sh 'docker info'
+
+                        // Pull and run the Astra CLI Docker image
+                        docker.image('your-docker-repo/astra-cli-image:latest').inside {
                             sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
                         }
+
                         // Archive the scan results
                         archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
                     } catch (Exception e) {
