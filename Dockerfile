@@ -1,8 +1,8 @@
 # Navigate to the directory containing your Dockerfile
-cd /path/to/Dockerfile
+cd C:\Program Files\Docker\Docker
 
 # Build the Docker image
-docker build -t your-docker-repo/astra-cli-image:latest .
+docker build -t astra/astra-cli-image:latest .
 
 # Push the Docker image to a container registry
-docker push your-docker-repo/astra-cli-image:latest
+docker push astra/astra-cli-image:latest
