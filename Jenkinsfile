@@ -11,7 +11,7 @@ pipeline {
                 script {
                     try {
                         // Ensure Docker is installed and running on the Jenkins host
-                        docker.image('https://github.com/ManikandasamyS4/vulnerable/edit/main/Dockerfile/astra-cli-image:latest').inside {
+                        docker.image('C:/Users/Manikandasamy/vulnerable/astra-cli-image:latest').inside {
                             sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
                         }
                         // Archive the scan results
