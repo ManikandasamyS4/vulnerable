@@ -25,8 +25,8 @@ pipeline {
 
         stage('Test Docker Image') {
             steps {
-                    // Run tests on the Docker image
-                    // Add your test script or commands here
+                // Placeholder step
+                echo 'Testing Docker Image...'
             }
         }
 
@@ -38,8 +38,8 @@ pipeline {
                         sh "docker login -u $manikandasamy -p $Maniselvaraj@33"
                     }
                     // Tag and push the image to Docker Hub
-                    sh 'docker tag astra:latest $manikandasamy/astra:latest'
-                    sh 'docker push $manikandasamy/astra:latest'
+                    sh "docker tag astra:latest $manikandasamy/astra:latest"
+                    sh "docker push $manikandasamy/astra:latest"
                 }
             }
         }
@@ -49,7 +49,7 @@ pipeline {
                 script {
                     // Clean up the Docker environment
                     sh 'docker rmi astra:latest'
-                    sh 'docker rmi $manikandasamy/astra:latest'
+                    sh "docker rmi $manikandasamy/astra:latest"
                 }
             }
         }
