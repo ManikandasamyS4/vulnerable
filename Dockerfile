@@ -1,2 +1,11 @@
+# Use a lightweight Linux distribution as the base image
 FROM ubuntu:latest
-# Additional configuration and commands if needed
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y curl
+
+# Install Astra CLI
+RUN curl -sSL https://install.astrasecurity.io | bash
+
+# Set the entrypoint to the Astra CLI
+ENTRYPOINT ["astra"]
