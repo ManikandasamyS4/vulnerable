@@ -3,26 +3,16 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
-                // Add any build steps if necessary
+                // Build steps (e.g., compiling code, running unit tests)
             }
         }
         stage('Astra Scan') {
             steps {
                 script {
                     try {
-                        withCredentials([string(credentialsId: 'docker-username', variable: 'DOCKER_USERNAME'), string(credentialsId: 'docker-password', variable: 'DOCKER_PASSWORD')]) {
-                            // Perform Docker login
-                            bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
-                            
-                            // Ensure Docker is installed and running on the Jenkins host
-                            docker.image('astra/astra-cli-image:latest').inside {
-                                sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
-                            }
-                            
-                            // Archive the scan results
-                            archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
-                        }
+                        sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
+                        archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
+                        // Optional: Add logic to parse results and fail the build if critical issues are found
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
@@ -31,19 +21,14 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
             steps {
-                echo 'Deploying...'
-                // Add deployment steps if necessary
+                // Deployment steps
             }
         }
     }
     post {
         always {
-            echo 'Cleaning up...'
-            // Add any cleanup steps if necessary
+            // Actions to perform after every build, such as sending notifications or archiving artifacts
         }
     }
 }
