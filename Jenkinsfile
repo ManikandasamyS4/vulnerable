@@ -16,17 +16,17 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
+                script {
                     // Build the Docker image
                     sh 'docker build -t astra:latest .'
+                }
             }
         }
 
         stage('Test Docker Image') {
             steps {
-                script {
                     // Run tests on the Docker image
                     // Add your test script or commands here
-                }
             }
         }
 
