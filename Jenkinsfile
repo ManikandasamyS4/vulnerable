@@ -1,40 +1,45 @@
 pipeline {
     agent any
+    
     stages {
+        stage('Checkout SCM') {
+            steps {
+                // Checkout your source code from Git
+                checkout scm
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building...'
+                // Build your Docker image
+                script {
+                    docker.build("astra-cli-image:latest", ".C:\Users\Manikandasamy\vulnerable")
+                }
             }
         }
         stage('Astra Scan') {
             steps {
+                // Inspect the Docker image
                 script {
-                    try {
-                        // Ensure Docker is installed and running on the Jenkins host
-                        docker.image('C:/Users/Manikandasamy/vulnerable/astra-cli-image:latest').inside {
-                            sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
-                        }
-                        // Archive the scan results
-                        archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        throw e
-                    }
+                    docker.image("astra-cli-image:latest").inspect()
+                }
+                // Pull the Docker image
+                script {
+                    docker.image("astra-cli-image:latest").pull()
                 }
             }
         }
         stage('Deploy') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
             steps {
-                echo 'Deploying...'
+                // Add deployment steps here
             }
         }
     }
+    
     post {
         always {
+            // Clean up resources
             echo 'Cleaning up...'
+            cleanWs()
         }
     }
 }
