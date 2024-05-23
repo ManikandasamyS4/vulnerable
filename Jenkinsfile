@@ -12,7 +12,7 @@ pipeline {
             steps {
                 // Build your Docker image
                 script {
-                    docker.build("astra-cli-image:latest", ".C:\Users\Manikandasamy\vulnerable")
+                    docker.build("astra-cli-image:latest", ".C:/Users/Manikandasamy/vulnerable")
                 }
             }
         }
