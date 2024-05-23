@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = 'manikandasamy/astra'
         DOCKER_HUB_CREDENTIALS = '33'
+        API_ENDPOINT = 'https://heritageplus-notification.azurewebsites.net/api/PushNotification' // Replace this with your actual API endpoint
     }
 
     stages {
@@ -29,7 +30,16 @@ pipeline {
                 echo 'Testing Docker Image...'
             }
         }
-
+        
+        stage('Run Astra CLI Command') {
+            steps {
+                script {
+                    // Run the Astra CLI command with the Docker image
+                    bat "docker run -e API_ENDPOINT=$API_ENDPOINT astra:latest astra command"
+                }
+            }
+        }
+        
         stage('Push Docker Image') {
             steps {
                 script {
