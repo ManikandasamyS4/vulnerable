@@ -18,38 +18,41 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    bat 'docker build -t astra:latest .'
+                    sh 'docker build -t astra:latest .'
                 }
             }
         }
 
         stage('Test Docker Image') {
             steps {
-                // Placeholder step
-                echo 'Testing Docker Image...'
+                script {
+                    // Run tests on the Docker image
+                    // Add your test script or commands here
+                }
             }
         }
 
         stage('Push Docker Image') {
-            steps {
-                script {
-                    // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: '33', usernameVariable: 'manikandasamy', passwordVariable: 'Maniselvaraj@33')]) {
-                        bat "docker login -u $manikandasamy -p Maniselvaraj@33"
-                    }
-                    // Tag and push the image to Docker Hub
-                    bat "docker tag astra:latest $manikandasamy/astra:latest"
-                    bat "docker push $manikandasamy/astra:latest"
-                }
+    steps {
+        script {
+            // Login to Docker Hub using email address
+            withCredentials([usernamePassword(credentialsId: '33', usernameVariable: 'manikandan@astuto.ai', passwordVariable: 'Maniselvaraj@33')]) {
+                bat "docker login -e \"$manikandan@astuto\" -p \"$Maniselvaraj@33\""
             }
+
+            // Tag and push the image to Docker Hub
+            bat "docker tag astra:latest \"$manikandasamy/astra:latest\""
+            bat "docker push \"$manikandasamy/astra:latest\""
         }
+    }
+}
 
         stage('Clean Up') {
             steps {
                 script {
                     // Clean up the Docker environment
-                    bat 'docker rmi astra:latest'
-                    bat "docker rmi $manikandasamy/astra:latest"
+                    sh 'docker rmi astra:latest'
+                    sh 'docker rmi $manikandasamy/astra:latest'
                 }
             }
         }
