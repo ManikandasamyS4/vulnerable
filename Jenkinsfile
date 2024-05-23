@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    sh 'docker build -t astra:latest .'
+                    bat 'docker build -t astra:latest .'
                 }
             }
         }
@@ -35,11 +35,11 @@ pipeline {
                 script {
                     // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: '33', usernameVariable: 'manikandasamy', passwordVariable: 'Maniselvaraj@33')]) {
-                        sh "docker login -u $manikandasamy -p $Maniselvaraj@33"
+                        bat "docker login -u $manikandasamy -p Maniselvaraj@33"
                     }
                     // Tag and push the image to Docker Hub
-                    sh "docker tag astra:latest $manikandasamy/astra:latest"
-                    sh "docker push $manikandasamy/astra:latest"
+                    bat "docker tag astra:latest $manikandasamy/astra:latest"
+                    bat "docker push $manikandasamy/astra:latest"
                 }
             }
         }
@@ -48,8 +48,8 @@ pipeline {
             steps {
                 script {
                     // Clean up the Docker environment
-                    sh 'docker rmi astra:latest'
-                    sh "docker rmi $manikandasamy/astra:latest"
+                    bat 'docker rmi astra:latest'
+                    bat "docker rmi $manikandasamy/astra:latest"
                 }
             }
         }
