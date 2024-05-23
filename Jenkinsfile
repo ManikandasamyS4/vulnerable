@@ -28,7 +28,8 @@ pipeline {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
-                // Your deploy steps here
+                echo 'Deploying...'
+                // Add your deployment steps here
             }
         }
     }
