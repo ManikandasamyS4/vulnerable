@@ -3,16 +3,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // Build steps (e.g., compiling code, running unit tests)
+                echo 'Building...'
+                // Add any build steps if necessary
             }
         }
         stage('Astra Scan') {
             steps {
                 script {
                     try {
-                        sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
+                        // Ensure Docker is installed and running on the Jenkins host
+                        docker.image('astra/astra-cli-image:latest').inside {
+                            sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
+                        }
+                        // Archive the scan results
                         archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
-                        // Optional: Add logic to parse results and fail the build if critical issues are found
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
@@ -21,14 +25,19 @@ pipeline {
             }
         }
         stage('Deploy') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
             steps {
-                // Deployment steps
+                echo 'Deploying...'
+                // Add deployment steps if necessary
             }
         }
     }
     post {
         always {
-            // Actions to perform after every build, such as sending notifications or archiving artifacts
+            echo 'Cleaning up...'
+            // Add any cleanup steps if necessary
         }
     }
 }
