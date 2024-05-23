@@ -1,28 +1,19 @@
-# Use a Windows Server Core base image
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+# Use the base image with the necessary tools (e.g., Python, Git)
+FROM python:3.9-slim
 
-# Set environment variables
-ENV ASTRA_VERSION=1.2.3
-ENV ASTRA_HOME="C:\\opt\\astra"
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create the Astra home directory
-RUN mkdir %ASTRA_HOME%
-
-# Download and extract Astra tool
-RUN powershell -Command " `
-    $ErrorActionPreference = 'Stop'; `
-    Invoke-WebRequest -Uri 'https://github.com/flipkart-incubator/Astra.git/v${Env:ASTRA_VERSION}/astra_${Env:ASTRA_VERSION}_windows_x86_64.zip' -OutFile 'C:\\astra.zip'; `
-    Expand-Archive -Path 'C:\\astra.zip' -DestinationPath '%ASTRA_HOME%'; `
-    Remove-Item -Force 'C:\\astra.zip'"
-
-# Set the PATH environment variable
-ENV PATH="%ASTRA_HOME%;%PATH%"
-
-# Verify installation
-RUN powershell -Command "%ASTRA_HOME%\\astra.exe --version"
+# Clone Astra repository and install
+RUN git clone https://github.com/flipkart-incubator/Astra.git && \
+    cd Astra && \
+    python setup.py install
 
 # Set the working directory
-WORKDIR %ASTRA_HOME%
+WORKDIR /Astra
 
-# Set the entrypoint
-ENTRYPOINT ["astra.exe"]
+# Command to run when the container starts
+CMD ["astra"]
