@@ -1,45 +1,38 @@
 pipeline {
     agent any
-    
     stages {
-        stage('Checkout SCM') {
-            steps {
-                // Checkout your source code from Git
-                checkout scm
-            }
-        }
         stage('Build') {
             steps {
-                // Build your Docker image
-                script {
-                    docker.build("astra-cli-image:latest", ".C:/Users/Manikandasamy/vulnerable")
-                }
+                echo 'Building...'
+                // Your build steps here
             }
         }
         stage('Astra Scan') {
             steps {
-                // Inspect the Docker image
                 script {
-                    docker.image("astra-cli-image:latest").inspect()
-                }
-                // Pull the Docker image
-                script {
-                    docker.image("astra-cli-image:latest").pull()
+                    try {
+                        // Adjust this command according to the actual Astra CLI syntax and requirements
+                        bat 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
+                        archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
+                        // Optional: Add logic to parse results and fail the build if critical issues are found
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
                 }
             }
         }
         stage('Deploy') {
             steps {
-                // Add deployment steps here
+                echo 'Deploying...'
+                // Your deployment steps here
             }
         }
     }
-    
     post {
         always {
-            // Clean up resources
             echo 'Cleaning up...'
-            cleanWs()
+            // Actions to perform after every build
         }
     }
 }
