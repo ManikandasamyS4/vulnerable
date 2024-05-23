@@ -9,11 +9,11 @@ ENV ASTRA_HOME="C:\\opt\\astra"
 RUN mkdir %ASTRA_HOME%
 
 # Download and extract Astra tool
-RUN powershell -Command `
+RUN powershell -Command " `
     $ErrorActionPreference = 'Stop'; `
-    Invoke-WebRequest -Uri "https://github.com/astra-tool/astra/releases/download/v${Env:ASTRA_VERSION}/astra_${Env:ASTRA_VERSION}_windows_x86_64.zip" -OutFile C:\astra.zip; `
-    Expand-Archive -Path C:\astra.zip -DestinationPath %ASTRA_HOME%; `
-    Remove-Item -Force C:\astra.zip
+    Invoke-WebRequest -Uri 'https://github.com/astra-tool/astra/releases/download/v${Env:ASTRA_VERSION}/astra_${Env:ASTRA_VERSION}_windows_x86_64.zip' -OutFile 'C:\\astra.zip'; `
+    Expand-Archive -Path 'C:\\astra.zip' -DestinationPath '%ASTRA_HOME%'; `
+    Remove-Item -Force 'C:\\astra.zip'"
 
 # Set the PATH environment variable
 ENV PATH="%ASTRA_HOME%;%PATH%"
