@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -y \
 # Clone the Astra repository and install
 RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra && \
     cd /opt/astra && \
-    bash install.sh  # Assuming there's an install.sh script or equivalent in the repo
+    ls -l && \  # List the contents of the directory for debugging
+    cat README.md && \  # Print the contents of README.md for debugging
+    bash scripts/install.sh  # Adjusted path to the installation script
 
 # Expose necessary ports
 EXPOSE 8080 9090
