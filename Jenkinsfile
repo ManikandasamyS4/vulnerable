@@ -27,6 +27,12 @@ pipeline {
             steps {
                 // Placeholder step
                 echo 'Testing Docker Image...'
+
+                // Add your API testing step here with nohup
+                script {
+                    // Example: Call an API endpoint using curl with nohup
+                    sh 'nohup curl -X GET https://heritageplus-notification.azurewebsites.net/api/PushNotification > api_test_output.txt 2>&1 &'
+                }
             }
         }
 
