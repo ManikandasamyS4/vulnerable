@@ -1,13 +1,20 @@
-# Use a Python base image
-FROM python:3.9-slim
+# Use a base image (use the appropriate base image for Astra)
+FROM ubuntu:20.04
 
-# Update and install necessary packages
-RUN apt-get update && \
-    apt-get install -y git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Clone Astra repository and install
-RUN git clone https://github.com/flipkart-incubator/Astra.git && \
-    cd Astra && \
-    python setup.py install
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    software-properties-common
+
+# Install Astra (replace this with the actual installation commands for Astra)
+RUN curl -sSL https://https://github.com/flipkart-incubator/Astra.git | bash
+
+# Expose necessary ports
+EXPOSE 8080 9090
+
+# Set the default command to run Astra
+CMD ["astra", "start"]
