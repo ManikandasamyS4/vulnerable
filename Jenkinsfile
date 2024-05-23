@@ -25,8 +25,8 @@ pipeline {
 
         stage('Test Docker Image') {
             steps {
-                    // Run tests on the Docker image
-                    // Add your test script or commands here
+                // Placeholder step
+                echo 'Testing Docker Image...'
             }
         }
 
