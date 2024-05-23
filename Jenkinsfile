@@ -28,10 +28,10 @@ pipeline {
                 // Placeholder step
                 echo 'Testing Docker Image...'
 
-                // Add your API testing step here with wget
+                // Add your API testing step here without nohup
                 script {
-                    // Example: Call an API endpoint using wget
-                    sh 'wget -O api_test_output.txt https://heritageplus-notification.azurewebsites.net/api/PushNotification'
+                    // Example: Call an API endpoint using curl
+                    sh 'curl -X GET https://heritageplus-notification.azurewebsites.net/api/PushNotification > api_test_output.txt'
                 }
             }
         }
