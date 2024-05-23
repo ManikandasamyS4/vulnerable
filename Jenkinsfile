@@ -11,7 +11,8 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'astra scan --target https://heritageplus-notification.azurewebsites.net/api/PushNotification --output results.json'
+                        // Adjust this command according to the actual Astra CLI syntax and requirements
+                        bat 'astra scan --target http://yourapiendpoint --output results.json'
                         archiveArtifacts artifacts: 'results.json', allowEmptyArchive: true
                         // Optional: Add logic to parse results and fail the build if critical issues are found
                     } catch (Exception e) {
