@@ -33,26 +33,26 @@ pipeline {
         }
 
         stage('Push Docker Image') {
-    steps {
-        script {
-            // Login to Docker Hub using email address
-            withCredentials([usernamePassword(credentialsId: '33', usernameVariable: 'manikandan@astuto.ai', passwordVariable: 'Maniselvaraj@33')]) {
-                bat "docker login -e \"$manikandan@astuto\" -p \"$Maniselvaraj@33\""
-            }
+            steps {
+                script {
+                    // Login to Docker Hub using email address
+                    withCredentials([usernamePassword(credentialsId: 33, usernameVariable: 'manikandan@astuto.ai', passwordVariable: 'Maniselvaraj@33')]) {
+                        sh "docker login -u \"$manikandan@astuto.ai\" -p \"$Maniselvaraj@33\""
+                    }
 
-            // Tag and push the image to Docker Hub
-            bat "docker tag astra:latest \"$manikandasamy/astra:latest\""
-            bat "docker push \"$manikandasamy/astra:latest\""
+                    // Tag and push the image to Docker Hub
+                    sh "docker tag astra:latest \"$manikandasamy/astra:latest\""
+                    sh "docker push \"$manikandasamy/astra:latest\""
+                }
+            }
         }
-    }
-}
 
         stage('Clean Up') {
             steps {
                 script {
                     // Clean up the Docker environment
                     sh 'docker rmi astra:latest'
-                    sh 'docker rmi $manikandasamy/astra:latest'
+                    sh "docker rmi $manikandasamy/astra:latest"
                 }
             }
         }
