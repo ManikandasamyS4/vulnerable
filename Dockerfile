@@ -11,7 +11,7 @@ RUN mkdir %ASTRA_HOME%
 # Download and extract Astra tool
 RUN powershell -Command `
     $ErrorActionPreference = 'Stop'; `
-    Invoke-WebRequest -Uri https://github.com/astra-tool/astra/releases/download/v${env:ASTRA_VERSION}/astra_${env:ASTRA_VERSION}_windows_x86_64.zip -OutFile C:\astra.zip; `
+    Invoke-WebRequest -Uri "https://github.com/astra-tool/astra/releases/download/v${Env:ASTRA_VERSION}/astra_${Env:ASTRA_VERSION}_windows_x86_64.zip" -OutFile C:\astra.zip; `
     Expand-Archive -Path C:\astra.zip -DestinationPath %ASTRA_HOME%; `
     Remove-Item -Force C:\astra.zip
 
@@ -19,7 +19,7 @@ RUN powershell -Command `
 ENV PATH="%ASTRA_HOME%;%PATH%"
 
 # Verify installation
-RUN cmd /c %ASTRA_HOME%\astra.exe --version
+RUN powershell -Command "%ASTRA_HOME%\\astra.exe --version"
 
 # Set the working directory
 WORKDIR %ASTRA_HOME%
