@@ -11,10 +11,8 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     git
 
-# Clone the Astra repository and install
-RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra && \
-    cd /opt/astra && \
-    bash scripts/install.sh  # Adjusted path to the installation script
+# Clone the Astra repository
+RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra
 
 # Expose necessary ports
 EXPOSE 8080 9090
