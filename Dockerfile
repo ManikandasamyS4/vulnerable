@@ -1,14 +1,5 @@
-# Use a Python base image
-FROM python:3.9-slim
+# Build the Docker image
+docker build -t your-docker-repo/astra-cli-image:latest .
 
-# Update and install necessary packages
-RUN apt-get update && \
-    apt-get install -y git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Clone Astra repository and install
-RUN git clone https://github.com/flipkart-incubator/Astra.git && \
-    cd Astra && \
-    ls -al && \
-    python setup.py install
+# Push the Docker image to a container registry
+docker push your-docker-repo/astra-cli-image:latest
