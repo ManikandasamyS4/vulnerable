@@ -34,8 +34,8 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: '33', usernameVariable: 'manikandasamy@astuto.ai', passwordVariable: 'Maniselvaraj@33')]) {
-                        bat "docker login -u $manikandasamy@astuto.ai -p Maniselvaraj@33"
+                    withCredentials([usernamePassword(credentialsId: '33', usernameVariable: 'manikandasamy', passwordVariable: 'Maniselvaraj@33')]) {
+                        bat "docker login -u $manikandasamy -p Maniselvaraj@33"
                     }
                     // Tag and push the image to Docker Hub
                     bat "docker tag astra:latest $manikandasamy/astra:latest"
