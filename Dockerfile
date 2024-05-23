@@ -1,4 +1,4 @@
-# Use an official Linux base image
+# Use an official Ubuntu base image
 FROM ubuntu:20.04
 
 # Set environment variables
@@ -10,9 +10,11 @@ RUN apt-get update && \
     apt-get install -y curl tar && \
     rm -rf /var/lib/apt/lists/*
 
-# Download and install Astra tool
+# Download Astra tool and extract it
 RUN mkdir -p $ASTRA_HOME && \
-    curl -sSL https://github.com/astra-tool/astra/releases/download/v${ASTRA_VERSION}/astra_${ASTRA_VERSION}_linux_x86_64.tar.gz | tar -xzC $ASTRA_HOME
+    curl -sSL -o /tmp/astra.tar.gz https://github.com/astra-tool/astra/releases/download/v${ASTRA_VERSION}/astra_${ASTRA_VERSION}_linux_x86_64.tar.gz && \
+    tar -xzf /tmp/astra.tar.gz -C $ASTRA_HOME && \
+    rm /tmp/astra.tar.gz
 
 # Set the working directory
 WORKDIR $ASTRA_HOME
