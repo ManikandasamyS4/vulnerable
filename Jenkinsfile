@@ -26,16 +26,25 @@ pipeline {
 
         stage('Test Docker Image') {
             steps {
-                // Placeholder step
                 echo 'Testing Docker Image...'
             }
         }
-        
+
+        stage('Verify Astra CLI Installation') {
+            steps {
+                script {
+                    // Verify the Astra CLI installation
+                    bat 'docker run astra:latest which astra'
+                    bat 'docker run astra:latest ls -l /opt/astra/astra'
+                }
+            }
+        }
+
         stage('Run Astra CLI Command') {
             steps {
                 script {
                     // Run the Astra CLI command with the Docker image
-                    bat "docker run -e API_ENDPOINT=${API_ENDPOINT} astra:latest astra command || exit 127"
+                    bat "docker run -e API_ENDPOINT=${API_ENDPOINT} astra:latest ./astra command"
                 }
             }
         }
@@ -45,7 +54,7 @@ pipeline {
                 script {
                     // Login to Docker Hub using credentials
                     withCredentials([usernamePassword(credentialsId: 33, usernameVariable: 'manikandan@astuto.ai', passwordVariable: 'Maniselvaraj@33')]) {
-                        bat "docker login -u \"manikandan@astuto.ai\" -p \"Maniselvaraj@33\""
+                        bat "docker login -u \"%manikandan@astuto.ai%\" -p \"%Maniselvaraj@33%\""
                     }
 
                     // Tag and push the image to Docker Hub
