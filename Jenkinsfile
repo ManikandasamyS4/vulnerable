@@ -17,8 +17,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Enable BuildKit and build the Docker image
-                    bat 'set DOCKER_BUILDKIT=1 && docker build -t astra:latest .'
+                    // Set DOCKER_BUILDKIT environment variable properly
+                    bat 'set "DOCKER_BUILDKIT=1" && docker build -t astra:latest .'
                 }
             }
         }
