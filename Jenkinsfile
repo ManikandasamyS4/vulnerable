@@ -30,8 +30,8 @@ pipeline {
                             // Execute the command directly on Unix systems
                             sh command
                         } else {
-                            // For Windows systems, wrap the command in a PowerShell script
-                            bat "powershell -command \"& { $command }\""
+                            // For Windows systems, use 'docker exec' instead of 'nohup'
+                            bat "start /B $command"
                         }
                     } catch (Exception e) {
                         // Handle any exceptions
