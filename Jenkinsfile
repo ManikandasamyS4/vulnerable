@@ -13,7 +13,7 @@ pipeline {
                         // Ensure python is installed and available in the PATH environment variable
                         sh "python --version"
                         // Run the Astra tool directly
-                        sh "python -c \"$(curl -fsSL https://raw.githubusercontent.com/flipkart-incubator/Astra/master/astra.py)\" -u --api-endpoint ${params.API_ENDPOINT}"
+                        sh "python -c \"\$(curl -fsSL https://raw.githubusercontent.com/flipkart-incubator/Astra/master/astra.py)\" -u --api-endpoint ${params.API_ENDPOINT}"
                     }
                 }
             }
