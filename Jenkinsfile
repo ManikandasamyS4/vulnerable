@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKER_HUB_REPO = 'manikandasamy/astra'
-        DOCKER_HUB_CREDENTIALS = '33'
-        API_ENDPOINT = 'https://heritageplus-notification.azurewebsites.net/api/PushNotification' // Replace this with your actual API endpoint
+        DOCKER_HUB_CREDENTIALS = '33'  // This should be the ID of your Jenkins credentials
+        API_ENDPOINT = 'https://heritageplus-notification.azurewebsites.net/api/PushNotification'
     }
 
     stages {
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     // Run the Astra CLI command with the Docker image
-                    bat "docker run -e API_ENDPOINT=$API_ENDPOINT astra:latest astra command"
+                    bat "docker run -e API_ENDPOINT=${API_ENDPOINT} astra:latest astra command || exit 127"
                 }
             }
         }
@@ -43,14 +43,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Login to Docker Hub using email address
+                    // Login to Docker Hub using credentials
                     withCredentials([usernamePassword(credentialsId: 33, usernameVariable: 'manikandan@astuto.ai', passwordVariable: 'Maniselvaraj@33')]) {
-                        bat "docker login -u \"$manikandan@astuto.ai\" -p \"$Maniselvaraj@33\""
+                        bat "docker login -u \"manikandan@astuto.ai\" -p \"Maniselvaraj@33\""
                     }
 
                     // Tag and push the image to Docker Hub
-                    bat "docker tag astra:latest \"$manikandasamy/astra:latest\""
-                    bat "docker push \"$manikandasamy/astra:latest\""
+                    bat "docker tag astra:latest ${manikandasamy/astra}:latest"
+                    bat "docker push ${manikandasamy/astra}:latest"
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
                 script {
                     // Clean up the Docker environment
                     bat 'docker rmi astra:latest'
-                    bat "docker rmi $manikandasamy/astra:latest"
+                    bat "docker rmi ${manikandasamy/astra}:latest"
                 }
             }
         }
