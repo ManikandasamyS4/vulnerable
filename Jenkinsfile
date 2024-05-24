@@ -6,18 +6,15 @@ pipeline {
     }
 
     stages {
-        stage('Clone Astra Repository') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/flipkart-incubator/Astra.git'
-                }
-            }
-        }
-
         stage('Run Astra Tool') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "cd Astra && python astra.py -u --api-endpoint ${params.API_ENDPOINT}"
+                    script {
+                        // Ensure python is installed and available in the PATH environment variable
+                        sh "python --version"
+                        // Run the Astra tool directly
+                        sh "python https://raw.githubusercontent.com/flipkart-incubator/Astra/master/astra.py -u --api-endpoint ${params.API_ENDPOINT}"
+                    }
                 }
             }
         }
