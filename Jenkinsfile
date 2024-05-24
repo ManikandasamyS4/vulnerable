@@ -9,7 +9,7 @@ pipeline {
         stage('Clone Astra Repository') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git clone 'https://github.com/flipkart-incubator/Astra.git'
+                    git 'https://github.com/flipkart-incubator/Astra.git'
                 }
             }
         }
