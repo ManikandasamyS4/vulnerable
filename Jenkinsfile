@@ -20,7 +20,7 @@ pipeline {
 
         stage('Run Astra Tool') {
             steps {
-                sh "cd Astra && ./astra.sh --api-endpoint ${params.API_ENDPOINT}"
+                sh "cd Astra && python astra.py -u --api-endpoint ${params.API_ENDPOINT}"
             }
         }
     }
