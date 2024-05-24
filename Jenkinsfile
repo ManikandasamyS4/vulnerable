@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     // Run the Astra CLI command with the Docker image
-                    sh "docker run -e API_ENDPOINT=$API_ENDPOINT astra:latest astra command"
+                    bat "docker run -e API_ENDPOINT=$API_ENDPOINT astra:latest astra command"
                 }
             }
         }
