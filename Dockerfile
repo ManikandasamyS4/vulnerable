@@ -1,21 +1,22 @@
-# Use a base image (use the appropriate base image for Astra)
 FROM ubuntu:20.04
-
-# Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive
 
 # Install necessary dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     software-properties-common \
-    git
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 # Clone the Astra repository
 RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra
 
-# Expose necessary ports
-EXPOSE 8080 9090
+# Make sure the Astra CLI is installed and executable
+WORKDIR /opt/astra
+RUN chmod +x astra
 
-# Set the default command to run Astra
-CMD ["/opt/astra/bin/astra", "start"]  # Adjust the command to how Astra is started
+# Ensure /opt/astra is in the PATH
+ENV PATH="/opt/astra:${PATH}"
+
+# Command to keep the container running (if needed)
+CMD ["tail", "-f", "/dev/null"]
