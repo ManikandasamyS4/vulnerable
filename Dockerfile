@@ -1,24 +1,15 @@
-# Use an Alpine Linux base image
-FROM alpine:3.14
+FROM python:2-alpine
 
-# Install dependencies (curl and git)
-RUN apk add --no-cache curl git
+ENV app /app
 
-# Copy the Astra zip file from the host machine into the image
-COPY ./Astra.zip /tmp/Astra.zip
+RUN mkdir $app
+WORKDIR $app
+COPY . $app
 
-# Extract the Astra zip file
-RUN unzip /tmp/Astra.zip -d /opt \
-    && rm /tmp/Astra.zip
+RUN pip install -r requirements.txt
 
-# Set the working directory to the Astra directory
-WORKDIR /opt/Astra
+WORKDIR API/
 
-# Make the Astra executable file executable
-RUN chmod +x astra
-
-# Add /opt/Astra to the PATH environment variable
-ENV PATH="/opt/Astra:${PATH}"
-
-# Define the command to run when the container starts
-CMD ["astra"]
+EXPOSE 8094
+ENTRYPOINT ["python", "./api.py"]
+CMD ["tail -f /app/logs/scan.log"]
