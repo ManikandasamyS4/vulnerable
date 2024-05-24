@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                git 'https://github.com/ManikandasamyS4/vulnerable.git'
+                git branch: 'main', url: 'https://github.com/ManikandasamyS4/vulnerable.git'
             }
         }
 
