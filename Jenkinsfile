@@ -1,5 +1,3 @@
-jenkinsfile
-
 pipeline {
     agent any
 
@@ -13,7 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('astra:latest')
+                    dockerImage = docker.build('astra:latest')
                 }
             }
         }
@@ -21,12 +19,17 @@ pipeline {
         stage('Test API Endpoint') {
             steps {
                 script {
-                    docker.image('astra:latest').inside {
-                        // Replace 'http://example.com/api' with your actual API endpoint
+                    dockerImage.inside {
                         sh 'astra scan api https://heritageplus-notification.azurewebsites.net/api/PushNotification'
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
