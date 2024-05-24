@@ -1,21 +1,24 @@
+# Use an Alpine Linux base image
 FROM alpine:3.14
 
-# Install necessary packages
-RUN apk add --no-cache \
-    curl \
-    git
+# Install dependencies (curl and git)
+RUN apk add --no-cache curl git
 
-# Clone the Astra repository
-RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra
+# Copy the Astra zip file from the host machine into the image
+COPY ./Astra.zip /tmp/Astra.zip
 
-# Set the working directory
-WORKDIR /opt/astra
+# Extract the Astra zip file
+RUN unzip /tmp/Astra.zip -d /opt \
+    && rm /tmp/Astra.zip
 
-# Ensure the Astra CLI is executable
-RUN chmod +x ./astra/astra
+# Set the working directory to the Astra directory
+WORKDIR /opt/Astra
 
-# Set /opt/astra in the PATH
-ENV PATH="/opt/astra:${PATH}"
+# Make the Astra executable file executable
+RUN chmod +x astra
 
-# Define the entrypoint
-ENTRYPOINT ["astra"]
+# Add /opt/Astra to the PATH environment variable
+ENV PATH="/opt/Astra:${PATH}"
+
+# Define the command to run when the container starts
+CMD ["astra"]
