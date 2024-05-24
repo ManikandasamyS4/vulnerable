@@ -1,6 +1,6 @@
 FROM alpine:3.14
 
-# Install necessary dependencies
+# Install necessary packages
 RUN apk add --no-cache \
     curl \
     git
@@ -8,12 +8,14 @@ RUN apk add --no-cache \
 # Clone the Astra repository
 RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra
 
-# Make sure the Astra CLI is executable
+# Set the working directory
 WORKDIR /opt/astra
-RUN chmod +x astra
+
+# Ensure the Astra CLI is executable
+RUN chmod +x ./astra/astra
 
 # Set /opt/astra in the PATH
 ENV PATH="/opt/astra:${PATH}"
 
-# Command to keep the container running (useful for debugging)
-CMD ["tail", "-f", "/dev/null"]
+# Define the entrypoint
+ENTRYPOINT ["astra"]
