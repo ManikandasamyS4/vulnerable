@@ -12,12 +12,6 @@ pipeline {
             }
         }
 
-        stage('Install Astra Dependencies') {
-            steps {
-                sh "cd Astra && npm install"
-            }
-        }
-
         stage('Run Astra Tool') {
             steps {
                 sh "cd Astra && python astra.py -u --api-endpoint ${params.API_ENDPOINT}"
