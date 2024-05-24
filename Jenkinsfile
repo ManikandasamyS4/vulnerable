@@ -22,7 +22,23 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 // Run the Docker container with the specified options
-                sh 'docker run --rm -it --link astra-mongo:mongo astra-cli python astra.py -u https://heritageplus-notification.azurewebsites.net/api/PushNotification'
+                script {
+                    try {
+                        // Run Docker container with necessary options
+                        def command = "docker run --rm -it --link astra-mongo:mongo astra-cli"
+                        if (isUnix()) {
+                            // Execute the command directly on Unix systems
+                            sh command
+                        } else {
+                            // For Windows systems, wrap the command in a PowerShell script
+                            bat "powershell -command \"& { $command }\""
+                        }
+                    } catch (Exception e) {
+                        // Handle any exceptions
+                        echo "Error running Docker container: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
     }
