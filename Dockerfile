@@ -1,9 +1,9 @@
-FROM ubuntu:20.04-slim
+FROM alpine:3.14
 
-# Install necessary dependencies in one RUN command to minimize layers
-RUN apt-get update && \
-    apt-get install -y curl gnupg software-properties-common git && \
-    rm -rf /var/lib/apt/lists/*
+# Install necessary dependencies
+RUN apk add --no-cache \
+    curl \
+    git
 
 # Clone the Astra repository
 RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra
