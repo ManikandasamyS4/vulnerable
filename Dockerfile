@@ -1,22 +1,19 @@
-# Use a Windows base image
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+FROM alpine:3.14
 
-# Install Git and curl
-RUN powershell -Command " \
-    Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/v2.33.0.windows.2/MinGit-2.33.0.2-64-bit.zip -OutFile C:\git.zip ; \
-    Expand-Archive C:\git.zip -DestinationPath C:\git ; \
-    $env:Path += \";C:\git\cmd\" ; \
-    Remove-Item C:\git.zip -Force ; \
-    Invoke-WebRequest -Uri https://curl.se/windows/dl-7.79.1_1/curl-7.79.1_1-win64-mingw.zip -OutFile C:\curl.zip ; \
-    Expand-Archive C:\curl.zip -DestinationPath C:\curl ; \
-    $env:Path += \";C:\curl\bin\" ; \
-    Remove-Item C:\curl.zip -Force"
+# Install necessary dependencies
+RUN apk add --no-cache \
+    curl \
+    git
 
 # Clone the Astra repository
-RUN git clone https://github.com/flipkart-incubator/Astra.git C:\astra
+RUN git clone https://github.com/flipkart-incubator/Astra.git /opt/astra
 
-# Set working directory
-WORKDIR C:\astra
+# Make sure the Astra CLI is executable
+WORKDIR /opt/astra
+RUN chmod +x astra
 
-# Set execution permission for astra file (not required in Windows)
-# Ensure C:\astra is in the PATH (not required in Windows)
+# Set /opt/astra in the PATH
+ENV PATH="/opt/astra:${PATH}"
+
+# Command to keep the container running (useful for debugging)
+CMD ["tail", "-f", "/dev/null"]
