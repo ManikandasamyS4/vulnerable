@@ -31,8 +31,7 @@ pipeline {
                         -e BURP_START_URL=${BURP_START_URL} ^
                         -e BURP_REPORT_FILE_PATH=${BURP_REPORT_FILE_PATH} ^
                         -v %cd%:/app ^
-                        public.ecr.aws/portswigger/dastardly:latest ^
-                        dastardly
+                        public.ecr.aws/portswigger/dastardly:latest dastardly
                     """
                 }
             }
