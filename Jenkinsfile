@@ -1,34 +1,42 @@
 pipeline {
     agent any
-
+    tools {
+        git 'Default'
+    }
+    environment {
+        GIT_REPO_URL = 'https://github.com/ManikandasamyS4/vulnerable.git'
+        BRANCH = 'main'
+    }
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ManikandasamyS4/vulnerable.git'
+                checkout([$class: 'GitSCM', branches: [[name: "*/${BRANCH}"]], 
+                          userRemoteConfigs: [[url: "${GIT_REPO_URL}"]]])
             }
         }
         stage('Docker Pull Dastardly from Burp Suite container image') {
             steps {
                 script {
-                    docker.withRegistry('', 'dockerhub-credentials') {
-                        docker.image('portswigger/dastardly').pull()
-                    }
+                    bat 'docker pull public.ecr.aws/portswigger/dastardly:latest'
                 }
             }
         }
         stage('Docker run Dastardly from Burp Suite Scan') {
             steps {
                 script {
-                    docker.image('portswigger/dastardly').inside {
-                        sh 'dastardly scan'
-                    }
+                    bat '''
+                        docker run --rm ^
+                        -v %cd%:/app ^
+                        public.ecr.aws/portswigger/dastardly:latest ^
+                        --url http://your-target-url
+                    '''
                 }
             }
         }
     }
     post {
         always {
-            junit 'test-results/*.xml'
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
