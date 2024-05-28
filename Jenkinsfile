@@ -28,7 +28,7 @@ pipeline {
                 script {
                     bat """
                         docker run --rm ^
-                        -e BURP_START_URL='https://ginandjuice.shop/' -e ^
+                        -e BURP_START_URL='https://ginandjuice.shop/' ^
                         -e BURP_REPORT_FILE_PATH='C:/Users/Manikandasamy/Documents/zap-reports/Burp/report.xml' ^
                         -v C:/ProgramData/Jenkins/.jenkins/workspace/Dastardly-DAST:/app ^
                         public.ecr.aws/portswigger/dastardly:latest dastardly
@@ -39,7 +39,7 @@ pipeline {
     }
     post {
         always {
-            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
+            junit 'dastardly-report.xml', skipPublishingChecks: true
         }
     }
 }
