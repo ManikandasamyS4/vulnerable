@@ -1,47 +1,28 @@
+// Jenkinsfile (Declarative Pipeline) for integration of Dastardly, from Burp Suite.
+
 pipeline {
     agent any
-    
     stages {
-        stage('Checkout SCM') {
+        stage ("Docker Pull Dastardly from Burp Suite container image") {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                    doGenerateSubmoduleConfigurations: false, extensions: [], 
-                    userRemoteConfigs: [[url: 'https://github.com/ManikandasamyS4/vulnerable.git']]])
+                sh 'docker pull public.ecr.aws/portswigger/dastardly:latest'
             }
         }
-        stage('Docker Pull Dastardly from Burp Suite container image') {
+        stage ("Docker run Dastardly from Burp Suite Scan") {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'sudo docker pull burpsuite/dastardly'
-                    } else {
-                        bat 'docker pull burpsuite/dastardly'
-                    }
-                }
-            }
-        }
-        stage('Docker run Dastardly from Burp Suite Scan') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'sudo docker run --rm -v $(pwd):/mnt burpsuite/dastardly /mnt'
-                    } else {
-                        bat 'docker run --rm -v %cd%:/mnt burpsuite/dastardly /mnt'
-                    }
-                }
+                cleanWs()
+                sh '''
+                    docker run --user $(id -u) -v ${WORKSPACE}:${WORKSPACE}:rw \
+                    -e BURP_START_URL=https://ginandjuice.shop/ \
+                    -e BURP_REPORT_FILE_PATH=${WORKSPACE}/dastardly-report.xml \
+                    public.ecr.aws/portswigger/dastardly:latest
+                '''
             }
         }
     }
-    
     post {
         always {
-            junit '**/test-reports/*.xml'
-        }
-        cleanup {
-            cleanWs()
+            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
         }
     }
 }
