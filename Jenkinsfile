@@ -6,11 +6,13 @@ pipeline {
     environment {
         GIT_REPO_URL = 'https://github.com/ManikandasamyS4/vulnerable.git'
         BRANCH = 'main'
+        BURP_START_URL = 'https://ginandjuice.shop/' // Your target URL
+        BURP_REPORT_FILE_PATH = '/app/dastardly-report.xml' // Path where the report will be saved
     }
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: "*/${BRANCH}"]], 
+                checkout([$class: 'GitSCM', branches: [[name: "*/${BRANCH}"]],
                           userRemoteConfigs: [[url: "${GIT_REPO_URL}"]]])
             }
         }
@@ -26,9 +28,11 @@ pipeline {
                 script {
                     bat """
                         docker run --rm ^
+                        -e BURP_START_URL=${BURP_START_URL} ^
+                        -e BURP_REPORT_FILE_PATH=${BURP_REPORT_FILE_PATH} ^
                         -v %cd%:/app ^
                         public.ecr.aws/portswigger/dastardly:latest ^
-                        dastardly --url https://ginandjuice.shop/
+                        dastardly
                     """
                 }
             }
@@ -36,7 +40,7 @@ pipeline {
     }
     post {
         always {
-            junit '**/target/surefire-reports/*.xml'
+            junit 'dastardly-report.xml'
         }
     }
 }
