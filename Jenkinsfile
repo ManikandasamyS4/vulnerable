@@ -24,12 +24,12 @@ pipeline {
         stage('Docker run Dastardly from Burp Suite Scan') {
             steps {
                 script {
-                    bat '''
+                    bat """
                         docker run --rm ^
                         -v %cd%:/app ^
                         public.ecr.aws/portswigger/dastardly:latest ^
-                        --url http://your-target-url
-                    '''
+                        dastardly --url https://ginandjuice.shop/
+                    """
                 }
             }
         }
