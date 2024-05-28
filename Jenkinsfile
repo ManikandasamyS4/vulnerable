@@ -39,7 +39,7 @@ pipeline {
     }
     post {
         always {
-            junit 'dastardly-report.xml', skipPublishingChecks: true
+            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
         }
     }
 }
