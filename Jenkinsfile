@@ -6,7 +6,7 @@ pipeline {
     environment {
         GIT_REPO_URL = 'https://github.com/ManikandasamyS4/vulnerable.git'
         BRANCH = 'main'
-        BURP_START_URL = 'http://demo.testfire.net/' // Your target URL
+        BURP_START_URL = 'https://ginandjuice.shop/' // Your target URL
         BURP_REPORT_FILE_PATH = 'C:/Users/Manikandasamy/Documents/zap-reports/Burp' // Path where the report will be saved
     }
     stages {
@@ -28,7 +28,7 @@ pipeline {
         script {
             bat """
                 docker run --rm ^
-                -e BURP_START_URL='http://demo.testfire.net/' ^
+                -e BURP_START_URL='https://ginandjuice.shop/' ^
                 -e BURP_REPORT_FILE_PATH='C:/Users/Manikandasamy/Documents/zap-reports/Burp' ^
                 -v C:/ProgramData/Jenkins/.jenkins/workspace/Dastardly-DAST:/app ^
                 public.ecr.aws/portswigger/dastardly:latest dastardly
@@ -39,7 +39,10 @@ pipeline {
     }
     post {
         always {
-            junit 'dastardly-report.xml'
+            junit 'dastardly-report.xml', skipPublishingChecks: true
+        }
+    }
+}
         }
     }
 }
