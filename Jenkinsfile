@@ -7,7 +7,7 @@ pipeline {
         GIT_REPO_URL = 'https://github.com/ManikandasamyS4/vulnerable.git'
         BRANCH = 'main'
         BURP_START_URL = 'https://ginandjuice.shop/' // Your target URL
-        BURP_REPORT_FILE_PATH = '/app/dastardly-report.xml' // Path where the report will be saved
+        BURP_REPORT_FILE_PATH = 'C:/Users/Manikandasamy/Documents/zap-reports/Burp reports' // Path where the report will be saved
     }
     stages {
         stage('Checkout') {
